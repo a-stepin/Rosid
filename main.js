@@ -161,7 +161,7 @@ function populate(){
 	aSchedule.addCourse(sCourse, ["Mon", "Tue", "Thu", "Fri"])
 	aSchedule.addCourse(tCourse, ["Mon", "Tue", "Thu", "Wed", "Sat"])
 	aSchedule.addCourse(eCourse, ["Mon", "Tue", "Thu", "Fri", "Sat", "Wed"])
-	renderSchedule(aSchedule)
+	renderSchedule(aSchedule, body)
 	reverseScheduleIntersection(mySchedule, aSchedule)
 }
 
@@ -177,38 +177,41 @@ function random(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-function renderSchedule(schedule){
-	let width = 300
+function renderSchedule(schedule, location, whichDiv){
+	let width = (50/7)
 	let daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 	for(let i in daysOfWeek){
 		let day = daysOfWeek[i]
-		let left = 100 + (i*(width+10))
+		let left =   `${(i*(width))}%`
+		let height = `${(20/50)}%`
+		let top = `${whichDiv*50}%`
+		console.log(left)
 		let header = create("div")
-		header.style.height = 50
+		header.style.height = height
 		header.style.left = left
-		header.style.width = width
-		header.style.top = 50
+		header.style.width = `${width-0.5}%` 
+		header.style.top = top
 		header.style.backgroundColor = "grey"
 		header.innerHTML = day
 		header.style.textAlign = 'center'
 		header.style.position = 'absolute'
-		add(header, body)
+		add(header, location)
 		let courses = schedule.days[day]
 		for(let j in courses){
 			let theCourse = courses[j]
-			let height = theCourse.endTime - theCourse.startTime
+			let height = `${(theCourse.endTime - theCourse.startTime)*height}%` 
 			let top = 100 + theCourse.startTime -500
 			let div = create("div")
 			div.style.position = "absolute"
 			div.style.height = height
-			div.style.width = width
+			div.style.width = `${width-0.5}%` 
 			div.style.left = left
 			div.style.top = top
 			div.style.backgroundColor = theCourse.color;
 			div.innerHTML = theCourse.name
 			div.style.textAlign = 'center'
 			div.style.lineHeight = `${height}px`
-			add(div, body)
+			add(div, location)
 		}
 	}
 	console.log(schedule)

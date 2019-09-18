@@ -1,0 +1,18 @@
+#first-schedule {
+    background-color: #595a88;
+}
+#second-schedule {
+    background-color: #8b763a;
+}
+
+#mainbody {
+    width: 100%;
+    height: 100%;
+}
+
+.container-div {
+    width: 50%;
+    height: 50%;
+    color: black;
+}   
+
