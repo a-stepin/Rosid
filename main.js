@@ -137,10 +137,8 @@ function reverseScheduleIntersection(firstSchedule, secondSchedule){
 		}
 		days[l].intersect = breaks
 	}
-	
-	console.log(days)
-	
-	
+	console.log(days);
+	return days;
 }
 
 function populate(){
@@ -148,21 +146,28 @@ function populate(){
 	let firstCourse = newCourse(900, 1100, "Calculus")
 	let secondCourse = newCourse(1100, 1230, "French Literature") 
 	let thirdCourse = newCourse(730, 830, "Andrey Studies")
+	let thorthCourse = newCourse(500, 715, "Biology")
 	mySchedule.addCourse(firstCourse, ["Mon", "Tue", "Thu"])
 	mySchedule.addCourse(secondCourse, ["Mon", "Tue", "Thu", "Fri"])
 	mySchedule.addCourse(thirdCourse, ["Mon", "Tue", "Thu", "Wed", "Sat"])
+	mySchedule.addCourse(thorthCourse, ["Sun", "Tue", "Fri", "Wed", "Sat"])
 
 	let aSchedule = newSchedule("Alisa")
 	let fCourse = newCourse(900, 1130, "Calculus")
 	let sCourse = newCourse(1200, 1210, "French Literature") 
 	let tCourse = newCourse(530, 730, "Andrey Studies")
 	let eCourse = newCourse(830, 930, "Andrey Class")
+	let rCourse = newCourse(1734, 2400, "Chemistry, but it's taught by cats")
 	aSchedule.addCourse(fCourse, ["Mon", "Tue", "Thu"])
 	aSchedule.addCourse(sCourse, ["Mon", "Tue", "Thu", "Fri"])
 	aSchedule.addCourse(tCourse, ["Mon", "Tue", "Thu", "Wed", "Sat"])
 	aSchedule.addCourse(eCourse, ["Mon", "Tue", "Thu", "Fri", "Sat", "Wed"])
-	renderSchedule(aSchedule, body)
-	reverseScheduleIntersection(mySchedule, aSchedule)
+	mySchedule.addCourse(thorthCourse, ["Sun", "Tue", "Fri", "Wed", "Sat"])
+	mySchedule.addCourse(rCourse, ["Mon", "Tue", "Fri", "Wed", "Sat"])
+	renderSchedule(mySchedule, body, 0)
+	renderSchedule(aSchedule, body, 1)
+	let inter = reverseScheduleIntersection(mySchedule, aSchedule);
+	renderIntersections(inter, body);
 }
 
 function create(obj) {
@@ -177,17 +182,53 @@ function random(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+function renderIntersections(intersection, location) {
+	let width = (50/7)
+	let daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+	for(let i in daysOfWeek){
+		let day = daysOfWeek[i]
+		let left = `${50+(i*(width))}%`
+		let height = (20/50)
+		let top = `${25}%`
+		let header = create("div")
+		header.style.height = `${height}%`
+		header.style.left = left
+		header.style.width = `${width-0.5}%` 
+		header.style.top = top
+		header.style.backgroundColor = "grey"
+		header.innerHTML = day
+		header.style.textAlign = 'center'
+		header.style.position = 'absolute'
+		add(header, location)
+		let inters = intersection[day].intersect;
+		for(let j in inters){
+			let inter = inters[j]
+			let height2 = `${((inter.end - inter.start)/24/2)}%` 
+			let top2 = `${25+(inter.start/24)/2}%` 
+			let div = create("div")
+			div.style.position = "absolute"
+			div.style.height = height2
+			div.style.width = `${width-0.5}%` 
+			div.style.left = left
+			div.style.top = top2
+			div.style.backgroundColor = "black";
+			div.style.textAlign = 'center'
+			div.style.lineHeight = `${height2}px`
+			add(div, location)
+		}
+	}
+}
+
 function renderSchedule(schedule, location, whichDiv){
 	let width = (50/7)
 	let daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 	for(let i in daysOfWeek){
 		let day = daysOfWeek[i]
-		let left =   `${(i*(width))}%`
-		let height = `${(20/50)}%`
+		let left = `${(i*(width))}%`
+		let height = (20/50)
 		let top = `${whichDiv*50}%`
-		console.log(left)
 		let header = create("div")
-		header.style.height = height
+		header.style.height = `${height}%`
 		header.style.left = left
 		header.style.width = `${width-0.5}%` 
 		header.style.top = top
@@ -199,22 +240,22 @@ function renderSchedule(schedule, location, whichDiv){
 		let courses = schedule.days[day]
 		for(let j in courses){
 			let theCourse = courses[j]
-			let height = `${(theCourse.endTime - theCourse.startTime)*height}%` 
-			let top = 100 + theCourse.startTime -500
+			let extraTime = (theCourse.endTime - theCourse.endTime%100)/100 - (theCourse.startTime - theCourse.startTime%100)/100 
+			let height2 = `${(((theCourse.endTime - theCourse.startTime - (extraTime*60))/24))}%` 
+			let top2 = `${(50*whichDiv)+((theCourse.startTime-((theCourse.startTime - theCourse.startTime%100)/100 )*60)/24)}%` 
 			let div = create("div")
 			div.style.position = "absolute"
-			div.style.height = height
+			div.style.height = height2
 			div.style.width = `${width-0.5}%` 
 			div.style.left = left
-			div.style.top = top
+			div.style.top = top2
 			div.style.backgroundColor = theCourse.color;
 			div.innerHTML = theCourse.name
 			div.style.textAlign = 'center'
-			div.style.lineHeight = `${height}px`
+			div.style.lineHeight = `${height2}px`
 			add(div, location)
 		}
 	}
-	console.log(schedule)
 }
 
 let body = undefined

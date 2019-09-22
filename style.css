@@ -4,7 +4,9 @@
 #second-schedule {
     background-color: #8b763a;
 }
-
+#third-schedule {
+    background-color: #438672;
+}
 #mainbody {
     width: 100%;
     height: 100%;
@@ -14,5 +16,14 @@
     width: 50%;
     height: 50%;
     color: black;
+    margin-left: -8px;
+    margin-top: -4px;
 }   
 
+.total-container{
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    width: 50%;
+    height: 50%;
+}
